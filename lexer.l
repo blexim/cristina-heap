@@ -6,7 +6,7 @@
 #define SAVE_TOKEN yylval.string = new std::string(yytext, yyleng)
 #define TOKEN(t) (yylval.token = t)
 
-extern "C" int yywrap() { return 0; }
+extern "C" int yywrap() {  }
 %}
 
 %%
@@ -16,6 +16,8 @@ extern "C" int yywrap() { return 0; }
 "free"                       return TFREE;
 "path"                       return TPATH;
 "onpath"                     return TONPATH;
+"dangling"                   return TDANGLING;
+"null"                       return TNULL;
 ";"                          return TSEMI;
 ","                          return TCOMMA;
 "->"                         return TARROW;

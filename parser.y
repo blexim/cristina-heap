@@ -37,7 +37,7 @@ heapvar *incmem() {
 %token <string> TID;
 %token <token> TPATH TONPATH TDANGLING TASSERT TNEW TFREE TDISJ;
 %token <token> TLPAR TRPAR TARROW TEQ TNEQ TASSIGN;
-%token <token> TNOT TSEMI TCOMMA;
+%token <token> TNOT TSEMI TCOMMA TNULL;
 
 %type <void> stmts stmt
 %type <expr> expr
@@ -50,10 +50,8 @@ heapvar *incmem() {
 stmts : stmt TSEMI
       | stmt TSEMI stmts;
 
-var : TID
-      {
-        $$ = new heapvar(*$1);
-      }
+var : TID { $$ = new heapvar(*$1); }
+    | TNULL { $$ = new heapvar(); }
     ;
 
 expr : var { $$ = new heapexpr(*$1); }

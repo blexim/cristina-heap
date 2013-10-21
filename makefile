@@ -17,14 +17,23 @@ heapabstraction.o: heapabstraction.cpp heapabstraction.h
 heaptransformer.o: heaptransformer.cpp heaptransformer.h
 	${CXX} ${FLAGS2} heaptransformer.cpp
 
-parser.cpp:
+parser.cpp: parser.y
 	bison -d -o parser.cpp parser.y
+
+parser.o: parser.cpp
+	${CXX} ${FLAGS2} parser.cpp -o parser.o
 
 lexer.cpp: parser.cpp
 	flex lexer.l
 
-parser: parser.cpp lexer.cpp heapliteral.o heapabstraction.o heaptransformer.o
-	${CXX} -o parser parser_main.cpp parser.cpp lexer.cpp heapliteral.o heapabstraction.o heaptransformer.o
+lexer.o: lexer.cpp
+	${CXX} ${FLAGS2} lexer.cpp -o lexer.o
+
+parser_main.o: parser_main.cpp
+	${CXX} ${FLAGS2} parser_main.cpp
+
+parser: parser_main.o parser.o lexer.o heapliteral.o heapabstraction.o heaptransformer.o
+	${CXX} ${FLAGS1} -o parser parser_main.cpp parser.o lexer.o heapliteral.o heapabstraction.o heaptransformer.o
 
 clean:
 	rm -f *o

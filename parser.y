@@ -1,5 +1,7 @@
 %{
 #include <stdio.h>
+#include <iostream>
+#include <sstream>
 
 #include "heapliteral.h"
 #include "heaptesting.h"
@@ -14,9 +16,9 @@ int memcnt = 0;
 
 heapvar *incmem() {
   memcnt++;
-  std::string varname = "m" + memcnt;
-
-  printf("New mem var: %s\n", varname.c_str());
+  std::stringstream ss;
+  ss << "m" << memcnt;
+  std::string varname = ss.str();
 
   return new heapvar(varname);
 }
@@ -45,10 +47,7 @@ heapvar *incmem() {
 
 %%
 
-stmts : stmt TSEMI {
-        printf("hai!\n");
-        fflush(stdout);
-      }
+stmts : stmt TSEMI
       | stmt TSEMI stmts;
 
 var : TID
@@ -65,9 +64,6 @@ stmt :
   var TARROW var TASSIGN var {
     heapvar *newmem = incmem();
     solver->add_literal(new store_lit(*newmem, *mem, *$1, *$3, *$5, stateTrue));
-
-    std::cout << "Assigning " << mem << ":" << newmem << std::endl;
-
     delete mem;
     mem = newmem;
   }
